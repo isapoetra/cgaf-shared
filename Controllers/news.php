@@ -47,8 +47,21 @@ class News extends StaticContentController {
         'rows'=>$m->loadObjects()
     ));
   }
+  function getActionAlias($action) {
+    switch ($action) {
+      case 'read':
+        return 'detail';
+    }
+    return parent::getActionAlias($action);
+  }
   function detail($args = null, $return = null) {
     $id =\Request::get('id');
+    if ($id==null) {
+       $rs = explode('/',$_REQUEST['__url']);
+       if (isset($rs[2]) && $rs[2]) {
+         $id = $rs[2];
+       }
+    }
     if ($id) {
       $m = $this->getModel()->reset('detail');
       $row = $m->where('id='.$m->quote($id))->loadObject();
@@ -71,13 +84,20 @@ class News extends StaticContentController {
     }
   }
   function Index($return=false) {
+    $currentPage = \Request::get('_cp',0);
+    $rpp = \Request::get('_rpp',10);
     $rows = $this
     ->getModel()
     ->reset()
     ->orderBy('date_created desc')
-    ->loadObjects();
+    ->loadObjects(null,$currentPage,$rpp);
+    $pageCount = $this->getModel()->clear()->select('count(*)','c',true)->loadObject()->c;
     return $this->renderView(
         'index', array(
+            'dataUrl'=>\URLHelper::add(APP_URL,'news/'),
+            'currentPage'=>$currentPage,
+            'pageCount'=>$pageCount,
+            'rowPerPage'=>$rpp,
             'title' => __('news.recent'),
             'rows'  => $rows)
     );

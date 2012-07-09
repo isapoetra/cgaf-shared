@@ -1,5 +1,7 @@
 <?php
 namespace System\Controllers;
+use System\JSON\JSONResponse;
+
 use System\JSON\JSONResult;
 use System\Exceptions\SystemException;
 use System\Exceptions\UnimplementedException;
@@ -33,9 +35,9 @@ class AuthController extends Controller {
     $header ='Content-type:application/x-www-form-urlencode';
     $params = array(
         'http' => array(
-          'header'=>$header,
-          'method' => 'POST',
-          'content' => $data));
+            'header'=>$header,
+            'method' => 'POST',
+            'content' => $data));
     // workaround for php bug where http headers don't get sent in php 5.2
     if(version_compare(PHP_VERSION, '5.3.0') == -1){
       ini_set('user_agent', 'PHP-SOAP/' . PHP_VERSION . "\r\n" . $header);
@@ -289,11 +291,15 @@ EOT;
     if (Request::get('__token', null, true, 'p')) {
       $this->getAppOwner()->resetToken();
     }
-    $retval = parent::render('form/login', array(
-        'providers' => $providers,
-        'redirect' => $redir,
-        '__msg' => $msg
-    ), true);
+    if (!\Request::isDataRequest()) {
+      $retval = parent::render('form/login', array(
+          'providers' => $providers,
+          'redirect' => $redir,
+          '__msg' => $msg
+      ), true);
+    }else{
+      return new JSONResult(0,"invalid username/password");
+    }
     return $retval;
   }
 }

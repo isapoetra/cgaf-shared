@@ -10,7 +10,7 @@ echo '</div><!-- EOF wrapper-inner -->';
 echo '</div><!-- EOF wrapper -->';
 echo $footer ? '<div>' . $footer . '</div>' : '';
 echo '<footer id="wrapper-footer" class="footer" data-role="footer" data-position="fixed">';
-echo '<p class="pull-right cgaf-powered"><a href="' . BASE_URL . 'about/app/cgaf/">Powered by CGAF ' . CGAF_VERSION. '</a>'.(CGAF_DEBUG ? '&nbsp;<span class="label label-warning">DEBUG MODE</span>' : '').'</p>';
+echo '<p class="pull-right cgaf-powered"><a href="' . BASE_URL . 'about/cgaf/">Powered by CGAF ' . CGAF_VERSION. '</a>'.(CGAF_DEBUG ? '&nbsp;<span class="label label-warning">DEBUG MODE</span>' : '').'</p>';
 echo $this->render ( 'shared/footer-common', true );
 //echo '<span class="r-address"> Your IP' . $_SERVER ['REMOTE_ADDR'] . '</span>';
 echo '</footer>';

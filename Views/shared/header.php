@@ -58,6 +58,9 @@ if ($s) {
 	}
 }
 echo '</style>';
+echo '<!--[if (gte IE 6)&(lte IE 8)]>';
+echo '<script type="text/javascript" src="'.$appOwner->getLiveAsset('selectivizr.js').'"></script>';
+echo '<![endif]-->';
 echo '</head>';
 echo '<body ' . ($bodyattr ? $bodyattr : '') . '>';
 

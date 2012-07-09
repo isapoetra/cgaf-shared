@@ -41,12 +41,16 @@ class AboutController extends StaticContentController {
     if (!$instance) {
       $instance = $this->getAppOwner();
     }
+    $or = explode('/',$_REQUEST['__url']);
+    array_shift($or);
+    array_shift($or);
+    array_pop($or);
     $fname = basename(array_pop($ori));
+
     $spath =array();
     $spath[] = $instance->getInternalStorage('contents/about/');
     $spath[] = \CGAF::getInternalStorage('contents/about/app/'.$app.'/',false);
-
-    $ori = ACLHelper::secureFile(implode('/',$ori),true).DS;
+    $ori = ACLHelper::secureFile(implode('/',$or),true).DS;
     foreach($spath as $f) {
       $fs = $f.$ori.$fname;
       if (is_file($fs)) {
@@ -96,7 +100,11 @@ class AboutController extends StaticContentController {
   }
   function auth() {
     $this->_template = null;
-    return parent::Index(__FUNCTION__);
+    $f = $this->getContentFile(__FUNCTION__, true);
+    if ($f && is_file($f)) {
+      return $this->renderFile(__FUNCTION__, $f);
+    }
+    return '';
   }
   function edit($row = null) {
     $a = ACLHelper::secureFile(\Request::get('id'), false);
@@ -142,6 +150,7 @@ class AboutController extends StaticContentController {
   }
   function Index($a = null) {
     $route = MVCHelper::getRoute();
+
     $a = $route['_a'];
     switch ($a) {
       case 'index':
